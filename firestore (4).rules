@@ -1,0 +1,108 @@
+// firestore.rules
+//
+// Deploy with: firebase deploy --only firestore:rules
+// (requires the Firebase CLI, run `firebase init firestore` once first)
+//
+// Core principles enforced here:
+//  1. A vendor can only read/write their OWN data (vendorId == request.auth.uid).
+//  2. Vendors can NEVER write plan, subscriptionStatus, subscriptionExpiry, or anything
+//     payment-related from the client — those fields are only ever written by the
+//     Admin SDK from serverless functions (webhook.js, checkout.js), which bypass
+//     these rules entirely.
+//  3. Collections that are purely server-authored (payments, webhookEvents, aiUsage)
+//     are not writable from the client at all.
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(vendorId) {
+      return isSignedIn() && request.auth.uid == vendorId;
+    }
+
+    // Fields a vendor is allowed to change themselves.
+    // Anything NOT in this list (plan, subscriptionStatus, subscriptionExpiry,
+    // subscriptionStart, welcomeEmailSentAt, etc.) is server-only.
+    function onlyEditableVendorFields() {
+      let allowed = [
+        'businessName', 'ownerName', 'phone', 'country', 'countryCode',
+        'region', 'city', 'address', 'currency', 'currencyCode', 'currencySymbol',
+        'timezone', 'locale', 'languages', 'businessCategory', 'businessDescription',
+        'businessHours', 'deliverySettings', 'paymentMethods', 'taxSettings',
+        'returnPolicy', 'aiPersonality', 'aiPaused', 'updatedAt',
+        'onboardingComplete'
+      ];
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(allowed);
+    }
+
+    match /vendors/{vendorId} {
+      allow read: if isOwner(vendorId);
+      allow create: if isOwner(vendorId);
+      allow update: if isOwner(vendorId) && onlyEditableVendorFields();
+      allow delete: if false; // account deletion goes through a server-side process
+    }
+
+    match /products/{productId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      // Products are written by the catalog sync service (Admin SDK), not the client.
+      allow write: if false;
+    }
+
+    match /customers/{customerId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      allow write: if false; // written by the WhatsApp webhook handler only
+    }
+
+    match /orders/{orderId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      // Vendors may update operational status (e.g. mark READY/DELIVERED) but not
+      // payment-related fields.
+      allow update: if isSignedIn()
+        && resource.data.vendorId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['orderStatus', 'updatedAt']);
+      allow create, delete: if false;
+    }
+
+    match /conversations/{conversationId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      allow write: if false; // written by the AI/WhatsApp webhook only
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      // Vendors may mark their own notifications as read, nothing else.
+      allow update: if isSignedIn()
+        && resource.data.vendorId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false;
+    }
+
+    // Vendors can VIEW their own billing history and AI usage, but only the
+    // Admin SDK (server) can ever write to these.
+    match /payments/{paymentId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      allow write: if false;
+    }
+    match /aiUsage/{usageId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      allow write: if false;
+    }
+    match /analyticsDaily/{docId} {
+      allow read: if isSignedIn() && resource.data.vendorId == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Fully server-only — no client access at all.
+    match /subscriptions/{subId} { allow read, write: if false; }
+    match /webhookEvents/{eventId} { allow read, write: if false; }
+    match /aiResponseCache/{cacheId} { allow read, write: if false; }
+    match /rateLimits/{limitId} { allow read, write: if false; }
+  }
+}

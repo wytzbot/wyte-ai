@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — WYTE AI</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <nav class="app-nav">
+    <a href="/dashboard.html" class="logo"><span class="logo-dot"></span>WYTE AI</a>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <button class="status-pill" id="aiStatusPill" title="Click to pause or resume">
+        <span class="status-dot"></span><span id="aiStatusText">Loading…</span>
+      </button>
+      <button class="btn btn-secondary" id="logoutBtn" style="padding:9px 16px; font-size:13.5px;">Log out</button>
+    </div>
+  </nav>
+
+  <main class="app-main">
+    <h1 id="greeting" style="font-size:24px;">Welcome back</h1>
+    <p id="planLine">Loading your plan…</p>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Today's conversations</div><div class="stat-value skeleton" style="width:40px; height:26px;">&nbsp;</div></div>
+      <div class="stat-card"><div class="stat-label">Today's enquiries</div><div class="stat-value skeleton" style="width:40px; height:26px;">&nbsp;</div></div>
+      <div class="stat-card"><div class="stat-label">Confirmed orders</div><div class="stat-value skeleton" style="width:40px; height:26px;">&nbsp;</div></div>
+      <div class="stat-card"><div class="stat-label">AI usage today</div><div class="stat-value skeleton" style="width:60px; height:26px;">&nbsp;</div></div>
+    </div>
+
+    <h2 style="font-size:16px; margin-top:32px;">Quick actions</h2>
+    <div class="quick-actions">
+      <button class="action-btn" onclick="location.href='/products.html'">Sync products</button>
+      <button class="action-btn" onclick="location.href='/orders.html'">View orders</button>
+      <button class="action-btn" onclick="location.href='/analytics.html'">Analytics</button>
+      <button class="action-btn" onclick="location.href='/customers.html'">Customers</button>
+      <button class="action-btn" onclick="location.href='/test-ai.html'">Test AI</button>
+      <button class="action-btn" onclick="location.href='/billing.html'">Billing</button>
+      <button class="action-btn" onclick="location.href='/settings.html'">Business settings</button>
+    </div>
+
+    <div class="card" id="upgradeCard" style="margin-top:32px; display:none;">
+      <h3>Upgrade to Premium</h3>
+      <p>Unlimited AI usage, sales analytics, custom AI personality, and AI-generated product descriptions.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+        <button class="btn btn-primary" id="upgradeNgnBtn">Upgrade for ₦10,000</button>
+        <button class="btn btn-secondary" id="upgradeUsdBtn">Upgrade for $10</button>
+      </div>
+      <p style="font-size:13px; margin-top:10px;"><a href="/billing.html">Paid via a payment link instead? Activate it here →</a></p>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="/dashboard.html" class="active">Home</a>
+    <a href="/products.html">Products</a>
+    <a href="/orders.html">Orders</a>
+    <a href="/settings.html">Settings</a>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+<script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders — WYTE AI</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .order-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; }
+  .order-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .order-product { font-weight: 600; font-size: 15px; }
+  .order-meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .order-total { font-family: var(--font-mono); font-size: 15px; white-space: nowrap; }
+  .order-status-select {
+    margin-top: 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family: var(--font-body); font-size: 13.5px;
+  }
+  .empty-state { text-align: center; padding: 60px 20px; background: #fff; border: 1px dashed var(--border); border-radius: var(--radius); margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <nav class="app-nav">
+    <a href="/dashboard.html" class="logo"><span class="logo-dot"></span>WYTE AI</a>
+  </nav>
+
+  <main class="app-main">
+    <h1 style="font-size:22px;">Orders</h1>
+    <div id="orderList"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <h3>No orders yet</h3>
+      <p>Confirmed orders from customer conversations will show up here.</p>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="/dashboard.html">Home</a>
+    <a href="/products.html">Products</a>
+    <a href="/orders.html" class="active">Orders</a>
+    <a href="/settings.html">Settings</a>
+  </nav>
+</div>
+<div class="toast" id="toast"></div>
+<script type="module" src="js/orders.js"></script>
+</body>
+</html>

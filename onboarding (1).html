@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set up your assistant — WYTE AI</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .onboard-shell { min-height: 100vh; background: var(--bg-soft); padding: 24px; }
+  .onboard-card { max-width: 480px; margin: 0 auto; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 32px; }
+  .progress-track { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.25s ease; }
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+  .onboard-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip {
+    border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px; font-size: 13.5px;
+    background: #fff; cursor: pointer; font-family: var(--font-body);
+  }
+  .chip.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .info-box { background: var(--accent-tint); border-radius: var(--radius-sm); padding: 14px; font-size: 13.5px; color: var(--accent-dark); margin-bottom: 16px; }
+  .skip-link { text-align: center; margin-top: 14px; font-size: 13.5px; }
+  .day-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .day-row label { width: 90px; font-size: 13.5px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="onboard-shell">
+  <div class="onboard-card">
+    <a href="/" class="logo" style="margin-bottom:18px; display:flex;"><span class="logo-dot"></span>WYTE AI</a>
+    <span class="progress-label" id="stepLabel">Step 3 of 10</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:30%;"></div></div>
+    <div class="form-error" id="formError"></div>
+
+    <!-- Step 3: Category -->
+    <div class="step-panel" data-step="3">
+      <h2>What does your business sell?</h2>
+      <p>This helps your AI assistant speak the right language with customers.</p>
+      <div class="chip-group" id="categoryChips">
+        <button type="button" class="chip" data-value="Fashion">Fashion</button>
+        <button type="button" class="chip" data-value="Beauty">Beauty</button>
+        <button type="button" class="chip" data-value="Electronics">Electronics</button>
+        <button type="button" class="chip" data-value="Food">Food</button>
+        <button type="button" class="chip" data-value="Home & Living">Home &amp; Living</button>
+        <button type="button" class="chip" data-value="Jewelry">Jewelry</button>
+        <button type="button" class="chip" data-value="Shoes">Shoes</button>
+        <button type="button" class="chip" data-value="Bags">Bags</button>
+        <button type="button" class="chip" data-value="Wigs & Hair">Wigs &amp; Hair</button>
+        <button type="button" class="chip" data-value="Other">Other</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Country / City -->
+    <div class="step-panel" data-step="4">
+      <h2>Where's your business based?</h2>
+      <div class="field">
+        <label for="country">Country</label>
+        <select id="country">
+          <option value="Nigeria">Nigeria</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="United States">United States</option>
+          <option value="Ghana">Ghana</option>
+          <option value="Kenya">Kenya</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="city">City</label>
+        <input type="text" id="city" placeholder="e.g. Enugu">
+      </div>
+    </div>
+
+    <!-- Step 5: Business hours -->
+    <div class="step-panel" data-step="5">
+      <h2>Business hours</h2>
+      <p>Customers messaging outside these hours still get a helpful reply — just one that lets them know you'll follow up.</p>
+      <div class="field">
+        <label for="openTime">Opens</label>
+        <input type="time" id="openTime" value="08:00">
+      </div>
+      <div class="field">
+        <label for="closeTime">Closes</label>
+        <input type="time" id="closeTime" value="19:00">
+      </div>
+    </div>
+
+    <!-- Step 6: Delivery -->
+    <div class="step-panel" data-step="6">
+      <h2>Delivery information</h2>
+      <p>You can add more detail later in Settings — this is just a starting point for the assistant.</p>
+      <div class="field">
+        <label for="deliveryFee">Standard delivery fee</label>
+        <input type="number" id="deliveryFee" min="0" placeholder="e.g. 1500">
+      </div>
+      <div class="field">
+        <label for="deliveryNote">Delivery notes (optional)</label>
+        <input type="text" id="deliveryNote" placeholder="e.g. 2-3 days within the city">
+      </div>
+    </div>
+
+    <!-- Step 7: Connect WhatsApp -->
+    <div class="step-panel" data-step="7">
+      <h2>Connect WhatsApp Business</h2>
+      <div class="info-box">
+        This step requires a Meta Business Portfolio and a WhatsApp Business Account already set up on Meta's side. WYTE AI cannot create these for you — Meta requires you to do this directly with them.
+      </div>
+      <p>Once your Meta setup is ready, connecting takes one click. If you haven't done the Meta-side setup yet, you can skip this for now and come back from Settings → WhatsApp.</p>
+      <button type="button" class="btn btn-secondary btn-block" id="connectWhatsappBtn" disabled>
+        Connect WhatsApp Business (requires Meta setup)
+      </button>
+    </div>
+
+    <!-- Step 8: Sync catalog -->
+    <div class="step-panel" data-step="8">
+      <h2>Sync your product catalog</h2>
+      <div class="info-box">
+        Catalog sync becomes available once WhatsApp is connected. You can skip this now and sync later from Products.
+      </div>
+      <button type="button" class="btn btn-secondary btn-block" disabled>Sync catalog (connect WhatsApp first)</button>
+    </div>
+
+    <!-- Step 9: Test AI -->
+    <div class="step-panel" data-step="9">
+      <h2>Test your AI</h2>
+      <p>Once your catalog is synced, you'll be able to try real questions here. For now, here's what it'll look like — head to Test AI from your dashboard any time.</p>
+      <div class="chat-demo" style="min-height:180px;">
+        <div class="bubble bubble-customer">How much is this?</div>
+        <div class="bubble bubble-ai">I don't have that information yet 😊 Once your catalog is connected I'll be able to answer this instantly.</div>
+      </div>
+    </div>
+
+    <!-- Step 10: Activate -->
+    <div class="step-panel" data-step="10">
+      <h2>You're ready</h2>
+      <p>Your assistant is set up with what you've told us so far. You can finish connecting WhatsApp and your catalog any time from Settings — the assistant will start answering as soon as those are in place.</p>
+      <div class="info-box">🟢 AI assistant will be active on your dashboard</div>
+    </div>
+
+    <div class="onboard-nav">
+      <button type="button" class="btn btn-secondary" id="backBtn">Back</button>
+      <button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
+    </div>
+    <p class="skip-link"><a href="#" id="skipLink">Skip this step for now</a></p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script type="module" src="js/onboarding.js"></script>
+</body>
+</html>
