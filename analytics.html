@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — WYTE AI</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .premium-lock {
+    background: var(--bg-soft); border: 1px dashed var(--border); border-radius: var(--radius);
+    padding: 24px; text-align: center; margin-top: 20px;
+  }
+  .list-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .list-row:last-child { border-bottom: none; }
+  .list-count { font-family: var(--font-mono); color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <nav class="app-nav">
+    <a href="/dashboard.html" class="logo"><span class="logo-dot"></span>WYTE AI</a>
+  </nav>
+
+  <main class="app-main">
+    <h1 style="font-size:22px;">Analytics</h1>
+
+    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="stat-card"><div class="stat-label">Conversations today</div><div class="stat-value" id="statConversations">—</div></div>
+      <div class="stat-card"><div class="stat-label">Enquiries today</div><div class="stat-value" id="statEnquiries">—</div></div>
+      <div class="stat-card"><div class="stat-label">Confirmed orders today</div><div class="stat-value" id="statOrders">—</div></div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <h3>Popular products</h3>
+      <div id="popularProducts"><p style="font-size:13.5px;">No order data yet.</p></div>
+    </div>
+
+    <div id="premiumSection"></div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="/dashboard.html">Home</a>
+    <a href="/products.html">Products</a>
+    <a href="/orders.html">Orders</a>
+    <a href="/settings.html">Settings</a>
+  </nav>
+</div>
+<script type="module" src="js/analytics.js"></script>
+</body>
+</html>

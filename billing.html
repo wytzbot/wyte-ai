@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing — WYTE AI</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .billing-shell { max-width: 520px; margin: 0 auto; }
+  .settings-section { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+  .settings-section h2 { font-size: 17px; }
+  .link-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .link-row:last-child { border-bottom: none; }
+  .history-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .history-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <nav class="app-nav">
+    <a href="/dashboard.html" class="logo"><span class="logo-dot"></span>WYTE AI</a>
+    <a href="/dashboard.html" class="btn btn-secondary" style="padding:9px 16px; font-size:13.5px;">Back to dashboard</a>
+  </nav>
+
+  <main class="app-main">
+    <div class="billing-shell">
+      <h1 style="font-size:22px;">Billing</h1>
+      <p id="planLine">Loading…</p>
+
+      <div class="settings-section">
+        <h2>Upgrade — recommended</h2>
+        <p style="font-size:14px;">Pay in-app. Activates automatically, no extra steps.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="upgradeNgnBtn">Upgrade for ₦10,000</button>
+          <button class="btn btn-secondary" id="upgradeUsdBtn">Upgrade for $10</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h2>Or pay via link</h2>
+        <div class="info-box" style="background:var(--accent-tint); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--accent-dark); margin-bottom:14px;">
+          Important: pay using <strong>the same email as your WYTE AI account</strong> (<span id="vendorEmail">—</span>). Payments made with a different email can't be automatically matched to your account.
+        </div>
+        <div class="link-row">
+          <span>₦10,000 — Nigeria</span>
+          <button class="btn btn-secondary pay-link-btn" data-currency="NGN" data-amount="₦10,000" data-url="https://flutterwave.com/pay/3t5mmavaemdr" style="padding:8px 16px; font-size:13px;">Pay ₦10,000</button>
+        </div>
+        <div class="link-row">
+          <span>$10 — International</span>
+          <button class="btn btn-secondary pay-link-btn" data-currency="USD" data-amount="$10" data-url="https://flutterwave.com/pay/fgkupwghfjvy" style="padding:8px 16px; font-size:13px;">Pay $10</button>
+        </div>
+
+        <h3 style="font-size:14.5px; margin-top:20px;">Already paid this way?</h3>
+        <p style="font-size:13px;">Enter the transaction ID from your payment receipt email to activate Premium.</p>
+        <div class="form-error" id="claimError"></div>
+        <div class="field">
+          <label for="transactionId">Transaction ID</label>
+          <input type="text" id="transactionId" inputmode="numeric" placeholder="e.g. 8123456">
+        </div>
+        <button class="btn btn-primary btn-block" id="claimBtn">Activate Premium</button>
+      </div>
+
+      <div class="settings-section" id="cancelSection" style="display:none;">
+        <h2>Cancel Premium</h2>
+        <p style="font-size:14px;">Since payments here are manual (not auto-recurring), there's nothing charging you again automatically — simply not renewing lets Premium lapse on its own at your expiry date. Use this only if you want to switch back to Free immediately instead of waiting.</p>
+        <button class="btn btn-secondary btn-block" id="cancelBtn" style="color:var(--danger); border-color:var(--danger);">Switch to Free now</button>
+      </div>
+
+      <div class="settings-section">
+        <h2>Payment history</h2>
+        <div id="paymentHistory"><p style="font-size:13.5px;">No payments yet.</p></div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="/dashboard.html">Home</a>
+    <a href="/products.html">Products</a>
+    <a href="/orders.html">Orders</a>
+    <a href="/settings.html">Settings</a>
+  </nav>
+</div>
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="payModal">
+  <div class="modal-card">
+    <h3>Before you pay</h3>
+    <p>Use this exact email on the Flutterwave payment page:</p>
+    <div class="modal-email-box" id="modalEmail">—</div>
+    <p style="margin-bottom:8px;">Why this matters:</p>
+    <ul class="modal-reasons">
+      <li>Payment links don't tell us which WYTE AI account paid — matching by email is how we know it's you</li>
+      <li>A different email means we can't verify the payment automatically, and Premium won't activate</li>
+      <li>You'll still need to come back here afterward and enter your transaction ID to activate Premium — paying alone doesn't activate it automatically on this path</li>
+    </ul>
+    <div class="modal-actions">
+      <a href="#" id="modalContinueBtn" target="_blank" rel="noopener" class="btn btn-primary btn-block">I'll use this email — continue to payment</a>
+      <button class="btn btn-secondary btn-block" id="modalCancelBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/billing.js"></script>
+</body>
+</html>
